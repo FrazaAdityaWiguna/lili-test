@@ -1,0 +1,19 @@
+{
+  "carts": 
+  [
+    {
+    "id": 1,
+    "name": "Black Svasti",
+    "quantity": 1,
+    "price": 239000,
+    "thumbnailUrl": "https://files.lili-style.io/product-images/thumbnails/2023-05-27/180705_1685313811645.jpeg"
+    },
+    {
+    "id": 2,
+    "quantity": 2,
+    "name": "Blossom Meurah Ishyana",
+    "price": 529000,
+    "thumbnailUrl": "https://files.lili-style.io/product-images/thumbnails/2023-05-24/191840_1685138973221.jpeg"
+    }
+  ]
+}
