@@ -2,25 +2,60 @@
   "name": "lili-test",
   "version": "0.1.0",
   "private": true,
+  "author": "Fraza",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "dev-db": "json-server --watch src/db/db.json --port 9000"
+    "type-check": "tsc --pretty --noEmit",
+    "lint": "eslint . --ext ts --ext tsx --ext js --cache --fix --max-warnings 0",
+    "dev-db": "json-server --watch src/db/db.json --port 9000",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "src/**/*.css": [
+      "prettier --write --parser css"
+    ],
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings 0",
+      "prettier --write",
+      "git add"
+    ],
+    "cypress/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings 0",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.7",
     "@mui/material": "^5.14.7",
     "@types/node": "20.5.7",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "eslint": "8.48.0",
-    "eslint-config-next": "13.4.19",
+    "axios": "^1.5.0",
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^12.1.6",
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "@typescript-eslint/parser": "^5.23.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "8.48.0",
+    "eslint-config-next": "13.4.19",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-flowtype": "^8.0.3",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.5.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1"
   }
 }
