@@ -1,4 +1,8 @@
-import { GetDetailCartType } from "@/types/Carts";
+import {
+  GetDetailCartType,
+  PayloadAddCart,
+  PayloadSubmitType,
+} from "@/types/Carts";
 import axios from "axios";
 
 const env = "http://localhost:9000";
@@ -33,6 +37,14 @@ const serviceApi = {
 
   async getDetailCart(payload: GetDetailCartType) {
     return HttpClient.get(`${env}/carts/${payload.id}`);
+  },
+
+  async postAddCart(id: number, payload: PayloadAddCart) {
+    return HttpClient.patch(`${env}/carts/${id}`, payload);
+  },
+
+  async postOrders(payload: PayloadSubmitType) {
+    return HttpClient.post(`${env}/orders`, payload);
   },
 };
 

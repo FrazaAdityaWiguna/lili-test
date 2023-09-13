@@ -17,9 +17,13 @@ import CheckCircleSharpIcon from "@mui/icons-material/CheckCircleSharp";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import CounterCount from "../CounterCount/CounterCount";
-import { CartsResponseType, CartsSelectedType } from "@/types/Carts";
+import {
+  AddCartsResponseType,
+  CartsResponseType,
+  CartsSelectedType,
+} from "@/types/Carts";
 import serviceApi from "@/https/https";
-import { formatRupiah } from "@/utils/common";
+import { debounce, formatRupiah } from "@/utils/common";
 import { useRouter } from "next/navigation";
 
 const ChartLists = () => {
@@ -27,6 +31,7 @@ const ChartLists = () => {
   const [selectAll, setselectAll] = useState<boolean>(true);
   const [dataCarts, setDataCarts] = useState<CartsSelectedType[]>([]);
   const [totalCart, setTotalCart] = useState<number>(0);
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
   const _getListCarts = useCallback(async () => {
     try {
@@ -47,20 +52,51 @@ const ChartLists = () => {
     }
   }, []);
 
-  const hendleCounter = useCallback(
-    (qty: number, id: number) => {
+  const _handleAddCart = useCallback(
+    async (id: number, num: number) => {
+      const payload = {
+        quantity: num,
+      };
+      const response: AddCartsResponseType = await serviceApi.postAddCart(
+        id,
+        payload
+      );
+
       const updatedCarts = dataCarts.map((cart) => {
-        if (cart.id === id) {
+        if (response.data.id === cart.id) {
           return {
-            ...cart,
-            quantity: qty,
+            ...response.data,
+            isChecked: cart.isChecked,
           };
         }
         return cart;
       });
+
       setDataCarts(updatedCarts);
     },
     [dataCarts]
+  );
+
+  const _submitCheckout = useCallback(async (data: CartsSelectedType[]) => {
+    const payload = {
+      id: Date.now(),
+      orders: data,
+    };
+
+    setIsSubmit(true);
+
+    const response = await serviceApi.postOrders(payload);
+
+    setIsSubmit(false);
+
+    return response;
+  }, []);
+
+  const hendleCounter = useCallback(
+    async (id: number, num: number) => {
+      debounce(() => _handleAddCart(id, num), 500)();
+    },
+    [_handleAddCart]
   );
 
   const handleSelectedCart = useCallback(
@@ -141,7 +177,11 @@ const ChartLists = () => {
               height={80}
               alt={data.name}
               priority
-              style={{ borderRadius: "16px", cursor: "pointer" }}
+              style={{
+                borderRadius: "16px",
+                cursor: "pointer",
+                height: "auto",
+              }}
               onClick={() => handleGoToDetail(data.id)}
             />
 
@@ -172,7 +212,7 @@ const ChartLists = () => {
                 justifyContent="space-between"
               >
                 <CounterCount
-                  onChangeCounter={(num: number) => hendleCounter(num, data.id)}
+                  onChangeCounter={(num: number) => hendleCounter(data.id, num)}
                   initialValue={data.quantity}
                 />
                 <Typography
@@ -286,6 +326,21 @@ const ChartLists = () => {
             </Stack>
           </>
         )}
+
+        <Box p={2}>
+          <Button
+            sx={{
+              backgroundColor: "#eaea2a",
+              width: "100%",
+              color: "#000",
+              fontWeight: "700",
+            }}
+            onClick={() => _submitCheckout(dataCarts)}
+            disabled={isSubmit}
+          >
+            Checkout
+          </Button>
+        </Box>
       </Card>
     </Box>
   );

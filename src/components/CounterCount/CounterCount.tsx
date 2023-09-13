@@ -22,6 +22,7 @@ const CounterCount = (props: CounterCountProps) => {
 
   const handleDecrement = useCallback(() => {
     const updatedCount = count - 1;
+
     if (count > 1) {
       setCount(updatedCount);
       onChangeCounter(updatedCount);

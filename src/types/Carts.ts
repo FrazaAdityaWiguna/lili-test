@@ -20,6 +20,11 @@ export type CartsResponseType = {
   status: number;
 };
 
+export type AddCartsResponseType = {
+  data: CartsType;
+  status: number;
+};
+
 export type DetailCartsResponseType = {
   data: CartsType;
   status: number;
@@ -27,4 +32,13 @@ export type DetailCartsResponseType = {
 
 export type GetDetailCartType = {
   id: string;
+};
+
+export type PayloadAddCart = {
+  quantity: number;
+};
+
+export type PayloadSubmitType = {
+  id: number;
+  orders: CartsSelectedType[];
 };
